@@ -1,0 +1,18 @@
+#!/bin/bash
+
+GITHUB_API_TOKEN=$@
+
+## Setup SSH Key
+ssh-keygen -t rsa
+
+## Push SSH key to Github
+KEY=$( cat ~/.ssh/id_rsa.pub )
+TITLE=${KEY/* }
+# the '/* ' above deletes every character in $KEY up to and including the last
+# space.
+
+JSON=$( printf '{"title": "%s", "key": "%s"}' "$TITLE" "$KEY" )
+
+TOKEN=$( cat /path/to/tokenfile )
+
+curl -s -d "$JSON" "https://api.github.com/user/keys?access_token=$GITHUB_API_TOKEN"
